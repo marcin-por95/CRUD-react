@@ -1,9 +1,7 @@
-
-
 // Selectors
 
 // Actions
-const createActioName = actionName => 'app/posts/${actionName}';
+
 
 // Actions creators
 const postsReducer = (statePart = [], action) => {
