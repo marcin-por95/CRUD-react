@@ -1,9 +1,5 @@
-// Selectors
+export const getAllPosts = state => state.posts;
 
-// Actions
-
-
-// Actions creators
 const postsReducer = (statePart = [], action) => {
     switch (action.type) {
         default:
