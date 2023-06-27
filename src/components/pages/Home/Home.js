@@ -9,7 +9,9 @@ const Home = () => {
             <Row>
                 <Col className='d-flex justify-content-between'>
                     <h1>All Posts</h1>
-                    <Button className='mb-3' variant='outline-primary' as={Link} to={'/post/add'}>Add post</Button>
+                  <Link to={'/post/add'}>
+                    <Button className='mb-3' variant='outline-primary'>Add post</Button>
+                  </Link>
                 </Col>
             </Row>
             <Posts />
