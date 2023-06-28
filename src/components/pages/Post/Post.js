@@ -41,7 +41,7 @@ const Post = props => {
 		  </div>
 		  <p><b>Author: </b>{ postData.author }<br/><b>Published: </b>{ postData.publishedDate }</p>
 		  <p>{ postData.shortDescription }</p>
-		  <p>{ postData.content }</p>
+		  <p><p dangerouslySetInnerHTML={{ __html: postData.content }} /></p>
 		</Card>
 	  </div>
 	  
