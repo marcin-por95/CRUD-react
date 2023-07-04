@@ -20,6 +20,7 @@ const EditPost = () => {
   return <>
 	<h1>Edit Post</h1>
 	<PostForm data={ postData } formHandler={ formHandler } buttonTitle="Edit post"/>
+      category={postData.category}
   </>
 }
 

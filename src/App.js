@@ -10,6 +10,8 @@ import Header from './components/common/Header/Header';
 import Footer from './components/common/Footer/Footer';
 import {Container} from 'react-bootstrap';
 import './App.scss';
+import Categories from "./components/pages/Categories/Categories";
+import SingleCategory from "./components/features/SingleCategory/SingleCategory";
 const App = () => {
     return (
 
@@ -18,6 +20,8 @@ const App = () => {
                 <Header/>
                 <Routes>
                     <Route path="/" element={<Home/>}/>
+                    <Route path="/categories" element={<Categories />} />
+                    <Route path="/categories/:category" element={<SingleCategory />} />
                     <Route path="/post/:id" element={<Post/>}/>
                     <Route path="/post/add" element={<AddPost/>}/>
                     <Route path="/post/edit/:id" element={<EditPost/>}/>

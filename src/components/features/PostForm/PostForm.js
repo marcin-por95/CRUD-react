@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import ReactQuill from 'react-quill';
 import DatePicker from 'react-datepicker';
 import 'react-quill/dist/quill.snow.css';
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { getAllCategories } from "../../../redux/categoriesRedux";
 
 const PostForm = ({ data, formHandler, buttonTitle }) => {
     const {
@@ -13,6 +15,14 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
         formState: { errors },
     } = useForm();
     const [formState, setFormState] = useState(data);
+    const allCategories = useSelector(getAllCategories);
+
+    useEffect(() => {
+        if (data) {
+            setFormState(data);
+        }
+    }, [data]);
+
     const formElements = [
         { name: 'title', title: "Title", type: 'text', placeholder: 'Enter title' },
         { name: 'author', title: "Author", type: 'text', placeholder: 'Enter author' },
@@ -22,10 +32,12 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
             title: "Short Description",
             type: 'text',
             placeholder: 'Leave a comment here',
-            as: "textarea"
+            as: "textarea",
         },
         { name: 'content', title: "Main content", type: 'text', placeholder: 'Leave a comment here', as: "textarea" },
+        { name: 'category', title: "Category", options: allCategories },
     ];
+
     const onChangeHandler = (value, name) => {
         if (value === "") {
             setFormState((prevState) => {
@@ -52,15 +64,33 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
                 placeholder={el.placeholder}
                 onChange={(value) => onChangeHandler(value, el.name)}
                 defaultValue={data?.[el.name]}
-            />
+            />;
         }
         if (el.name === 'publishedDate') {
             return <DatePicker
                 selected={formState?.[el.name]}
                 onChange={(value) => onChangeHandler(value, el.name)}
                 onSelect={(value) => onChangeHandler(value, el.name)}
-            />
+            />;
         }
+        if (el.name === 'category') {
+            return (
+                <Form.Control
+                    {...register(el.name, { required: true })}
+                    as="select"
+                    onChange={(e) => onChangeHandler(e.target.value, el.name)}
+                    value={formState?.[el.name] || ''}
+                >
+                    <option value="">Select category</option>
+                    {allCategories.map((option, index) => (
+                        <option key={index} value={option}>
+                            {option}
+                        </option>
+                    ))}
+                </Form.Control>
+            );
+        }
+
         return (
             <>
                 <Form.Control
@@ -76,16 +106,16 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
                     defaultValue={data?.[el.name]}
                 />
                 {errors[el.name] && errors[el.name].type === "required" && (
-                    <span style={errorStyles}>This field is required</span> // Dodajemy styl wewnętrzny
+                    <span style={errorStyles}>This field is required</span>
                 )}
                 {errors[el.name] && errors[el.name].type === "minLength" && (
                     <span style={errorStyles}>
-                        {el.name === 'title' || el.name === 'author' ? "Minimum length is 3 characters" : "Minimum length is 20 characters"}
-                    </span> // Dodajemy styl wewnętrzny
+            {el.name === 'title' || el.name === 'author' ? "Minimum length is 3 characters" : "Minimum length is 20 characters"}
+          </span>
                 )}
             </>
         );
-    }
+    };
 
     const onSubmit = (data) => {
         formHandler(data);
