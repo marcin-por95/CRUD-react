@@ -28,7 +28,7 @@ const Posts = ({ category }) => {
                                     {post.author}
                                     <br />
                                     <b>Published: </b>
-                                    {post.publishedDate.toLocaleDateString()}
+                                    {post.publishedDate?.toLocaleDateString()}
                                     <br />
                                     <b>Category: </b>
                                     {post.category}

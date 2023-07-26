@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
+import React, {useState, useEffect} from "react";
+import {Button, Form} from "react-bootstrap";
 import ReactQuill from 'react-quill';
 import DatePicker from 'react-datepicker';
 import 'react-quill/dist/quill.snow.css';
 import "react-datepicker/dist/react-datepicker.css";
-import { useSelector } from "react-redux";
-import { getAllCategories } from "../../../redux/categoriesRedux";
-import { useForm } from "react-hook-form";
+import {useSelector} from "react-redux";
+import {getAllCategories} from "../../../redux/categoriesRedux";
+import {useForm} from "react-hook-form";
 
-const PostForm = ({ data, formHandler, buttonTitle }) => {
+const PostForm = ({data, formHandler, buttonTitle}) => {
     const {
         register,
         handleSubmit: validate,
+        clearErrors,
         formState: { errors },
     } = useForm();
     const [formState, setFormState] = useState(data || {});
@@ -24,9 +25,9 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
     }, [data]);
 
     const formElements = [
-        { name: 'title', title: "Title", type: 'text', placeholder: 'Enter title' },
-        { name: 'author', title: "Author", type: 'text', placeholder: 'Enter author' },
-        { name: 'publishedDate', title: "Published", type: 'text', placeholder: 'Enter date' },
+        {name: 'title', title: "Title", type: 'text', placeholder: 'Enter title'},
+        {name: 'author', title: "Author", type: 'text', placeholder: 'Enter author'},
+        {name: 'publishedDate', title: "Published", type: 'text', placeholder: 'Enter date'},
         {
             name: 'shortDescription',
             title: "Short Description",
@@ -41,16 +42,17 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
             placeholder: 'Leave a comment here',
             as: "textarea",
         },
-        { name: 'category', title: "Category", options: allCategories },
+        {name: 'category', title: "Category"},
     ];
 
     const onChangeHandler = (value, name) => {
         if (value === "") {
             setFormState((prevState) => {
                 delete prevState[name];
-                return { ...prevState };
+                return {...prevState};
             });
         } else {
+            clearErrors(name);
             setFormState((prevState) => ({
                 ...prevState,
                 [name]: value
@@ -64,36 +66,63 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
 
     const getElementByName = (el) => {
         if (el.name === 'content') {
-            return <ReactQuill
-                type={el.type}
-                theme={"snow"}
-                placeholder={el.placeholder}
-                onChange={(value) => onChangeHandler(value, el.name)}
-                defaultValue={data?.[el.name]}
-            />;
+            return <>
+                <ReactQuill
+                    {...register(el.name, {
+                        validate: () => !formState?.[el.name]=== undefined|| "Please write some content",
+                    })}
+                    type={el.type}
+                    theme={"snow"}
+                    placeholder={el.placeholder}
+                    onChange={(value) => onChangeHandler(value, el.name)}
+                    defaultValue={data?.[el.name]}
+                />
+                {errors[el.name] && (
+                    <span style={errorStyles}>{errors[el.name].message}</span>
+                )}
+            </>;
         }
         if (el.name === 'publishedDate') {
-            return <DatePicker
-                selected={formState?.[el.name]}
-                onChange={(value) => onChangeHandler(value, el.name)}
-                onSelect={(value) => onChangeHandler(value, el.name)}
-            />;
+            return (<>
+                <DatePicker
+                    {...register(el.name, {
+                        validate: () => !formState?.[el.name]=== undefined || "Select date",
+                    })}
+                    selected={formState?.[el.name]}
+                    onChange={(value) => onChangeHandler(value, el.name)}
+                    onSelect={(value) => onChangeHandler(value, el.name)}
+                />
+                {errors[el.name] && (
+                    <span style={errorStyles}>{errors[el.name].message}</span>
+                )}
+            </>);
         }
         if (el.name === 'category') {
-            return (
-                <Form.Control
-                    {...register(el.name, { required: true })}
-                    as="select"
-                    onChange={(e) => onChangeHandler(e.target.value, el.name)}
-                    value={formState?.[el.name] || ''}
-                >
-                    <option value="">Select category</option>
-                    {allCategories.map((option, index) => (
-                        <option key={index} value={option}>
-                            {option}
-                        </option>
-                    ))}
-                </Form.Control>
+            return (<>
+                    <Form.Select
+                        {...register(el.name, {
+                            validate: (value) => {
+                                console.log(value);
+                                console.log(formState);
+                                return !formState?.[el.name] === undefined || "Select category";
+                            },
+                        })}
+                        as="select"
+                        onChange={(e) => onChangeHandler(e.target.value, el.name)}
+                        value={formState?.[el.name] || ''}
+                    >
+                        <option>Select category</option>
+                        {allCategories.map((option, index) => (
+                            <option key={index} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </Form.Select>
+                    {errors[el.name] && (
+                        <span style={errorStyles}>{errors[el.name].message}</span>
+                    )}
+                </>
+
             );
         }
 
@@ -137,7 +166,6 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
                 ))}
                 <Button
                     type="submit"
-                    disabled={formState != null && Object.values(formState).every((x) => !x)}
                 >
                     {buttonTitle}
                 </Button>
