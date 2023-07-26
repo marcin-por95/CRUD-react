@@ -1,9 +1,8 @@
+import React from "react";
 import { ListGroup } from "react-bootstrap";
 import { useSelector } from "react-redux";
-
+import { getAllCategories } from "../../../redux/categoriesRedux";
 import { Link } from "react-router-dom";
-import { getAllCategories } from '../../../redux/categoriesRedux';
-
 
 const Categories = () => {
     const categories = useSelector(getAllCategories);

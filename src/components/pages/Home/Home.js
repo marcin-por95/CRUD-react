@@ -1,7 +1,7 @@
 import { Col, Row, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Posts from "../../features/Posts/Posts";
-
+import React from 'react';
 
 const Home = () => {
     return (

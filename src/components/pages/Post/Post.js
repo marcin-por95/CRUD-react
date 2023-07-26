@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getPostById, removePost} from "../../../redux/postsRedux";
 import {useState} from "react";
 import {Button, Card, Modal} from "react-bootstrap";
-
+import React from 'react';
 const Post = props => {
 
 

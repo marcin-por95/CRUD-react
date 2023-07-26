@@ -4,9 +4,9 @@ import ReactQuill from 'react-quill';
 import DatePicker from 'react-datepicker';
 import 'react-quill/dist/quill.snow.css';
 import "react-datepicker/dist/react-datepicker.css";
-import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { getAllCategories } from "../../../redux/categoriesRedux";
+import { useForm } from "react-hook-form";
 
 const PostForm = ({ data, formHandler, buttonTitle }) => {
     const {
@@ -14,7 +14,7 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
         handleSubmit: validate,
         formState: { errors },
     } = useForm();
-    const [formState, setFormState] = useState(data);
+    const [formState, setFormState] = useState(data || {});
     const allCategories = useSelector(getAllCategories);
 
     useEffect(() => {
@@ -34,7 +34,13 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
             placeholder: 'Leave a comment here',
             as: "textarea",
         },
-        { name: 'content', title: "Main content", type: 'text', placeholder: 'Leave a comment here', as: "textarea" },
+        {
+            name: 'content',
+            title: "Main content",
+            type: 'text',
+            placeholder: 'Leave a comment here',
+            as: "textarea",
+        },
         { name: 'category', title: "Category", options: allCategories },
     ];
 
@@ -96,8 +102,7 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
                 <Form.Control
                     {...register(el.name, {
                         required: true,
-                        minLength: el.name === 'title' || el.name === 'author' ? 3 : undefined,
-                        minLength: el.name === 'shortDescription' ? 20 : undefined,
+                        minLength: el.name === 'title' || el.name === 'author' ? 3 : el.name === 'shortDescription' ? 20 : undefined,
                     })}
                     type={el.type}
                     placeholder={el.placeholder}
@@ -110,8 +115,8 @@ const PostForm = ({ data, formHandler, buttonTitle }) => {
                 )}
                 {errors[el.name] && errors[el.name].type === "minLength" && (
                     <span style={errorStyles}>
-            {el.name === 'title' || el.name === 'author' ? "Minimum length is 3 characters" : "Minimum length is 20 characters"}
-          </span>
+                        {el.name === 'title' || el.name === 'author' ? "Minimum length is 3 characters" : "Minimum length is 20 characters"}
+                    </span>
                 )}
             </>
         );

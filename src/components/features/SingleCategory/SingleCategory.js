@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getFilteredCategories } from '../../../redux/categoriesRedux';
-
+import React from 'react';
 import { Row, Alert, Container} from "react-bootstrap";
 import { Navigate } from "react-router-dom";
 import Posts from "../Posts/Posts";

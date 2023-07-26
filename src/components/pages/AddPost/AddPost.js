@@ -2,6 +2,7 @@ import PostForm from "../../features/PostForm/PostForm";
 import { addPost } from "../../../redux/postsRedux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import React from 'react';
 
 const AddPost = () => {
   const dispatch = useDispatch();
