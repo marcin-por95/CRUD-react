@@ -2,7 +2,7 @@
 export const getAllCategories = state => state.categories.categories;
 
 export const getFilteredCategories = (state, category) =>
-    state.posts.filter((post) => post.category.toLowerCase() === category.toLowerCase());
+    state.posts.posts.filter((post) => post.category.toLowerCase() === category.toLowerCase());
 
 // actions
 const CREATE_CATEGORY = 'app/categories/CREATE_CATEGORY';
